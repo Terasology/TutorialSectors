@@ -43,9 +43,13 @@ public class TestSystem extends BaseComponentSystem implements UpdateSubscriberS
     public void update(float delta) {
 
         //Global entities
-        for (EntityRef entity : entityManager.getEntitiesWith(TestComponent.class)) {
-            entity.getComponent(TestComponent.class).testValue++;
-            logger.info("" + entity.getComponent(TestComponent.class).testValue);
+        //Currently, getEntitiesWith only works for entities in the global cache
+        //for (EntityRef entity : entityManager.getEntitiesWith(TestComponent.class)) {
+        for (EntityRef entity : entityManager.getAllEntities()) {
+            if(entity.hasComponent(TestComponent.class)) {
+                entity.getComponent(TestComponent.class).testValue++;
+                logger.info("" + entity.getComponent(TestComponent.class).testValue);
+            }
         }
 
     }
@@ -53,10 +57,17 @@ public class TestSystem extends BaseComponentSystem implements UpdateSubscriberS
     @ReceiveEvent
     public void onPlayerSpawn(OnPlayerSpawnedEvent event, EntityRef player) {
 
-        //Standard global entity
-        EntityRef entity = entityManager.createSectorEntity();
+        //Global entity
+        EntityRef entity = entityManager.getGlobalCache().create();
         TestComponent testComp = new TestComponent();
         testComp.testValue = 0;
         entity.saveComponent(testComp);
+
+        //Sector entity
+        //EntityRef entity = entityManager.createSectorEntity();
+        EntityRef entity2 = entityManager.getSectorCache().create();
+        TestComponent testComp2 = new TestComponent();
+        testComp2.testValue = 20000;
+        entity2.saveComponent(testComp2);
     }
 }
