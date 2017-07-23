@@ -23,14 +23,20 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.sectors.LoadedSectorUpdateEvent;
 import org.terasology.entitySystem.sectors.SectorSimulationComponent;
 import org.terasology.entitySystem.sectors.SectorSimulationEvent;
+import org.terasology.entitySystem.sectors.SectorUtil;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.location.LocationComponent;
+import org.terasology.math.ChunkMath;
 import org.terasology.math.geom.Vector3f;
+import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
 import org.terasology.world.chunks.event.BeforeChunkUnload;
 import org.terasology.world.chunks.event.OnChunkLoaded;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class TestSystem extends BaseComponentSystem {
@@ -43,25 +49,39 @@ public class TestSystem extends BaseComponentSystem {
     @Override
     public void postBegin() {
         //Creating sector-scope entity with TestComponent for simulation
-        //LocationComponent added to see loading/unloading behaviour
+        //This has a maxDelta of 1, so will simulate at least once per second
         EntityRef entity = entityManager.createSectorEntity(1);
         entity.addComponent(new TestComponent());
+
+        //Make sure the entity stays loaded
+        entity.setAlwaysRelevant(true);
+
+        //Add a SectorRegionComponent to set the watched chunks
+        Set<Vector3i> chunks = new HashSet<>();
+        //Add the chunk with position 10, 0, 0
+        chunks.add(new Vector3i(10, 0, 0));
+        //Add the chunk that contains the block with position 1000, 0, 1000
+        chunks.add(ChunkMath.calcChunkPos(new Vector3i(1000, 0, 1000)));
+        entity.addComponent(SectorUtil.createSectorRegionComponent(chunks));
+
+        //Set the location to 0, 0, 0
+        //This is not needed, but will add the chunk containing this block to be watched, too
         entity.addComponent(new LocationComponent(new Vector3f(0, 0, 0)));
+
     }
 
     @ReceiveEvent
-    public void simulateCounting(SectorSimulationEvent event, EntityRef entity) {
+    public void simulateCounting(SectorSimulationEvent event, EntityRef entity, TestComponent component) {
         //Simulation only. This is the only place the value changes
-        TestComponent testComponent = entity.getComponent(TestComponent.class);
-        testComponent.floatValue += event.getDelta() * 2;
-        logger.info("Entity {} simulating. Value is {}", entity.getId(), testComponent.floatValue);
+        component.floatValue += event.getDelta() * 2;
+        logger.info("Entity {} simulating. Value is {}", entity.getId(), component.floatValue);
     }
 
     @ReceiveEvent
-    public void echoCounting(LoadedSectorUpdateEvent event, EntityRef entity) {
+    public void echoCounting(LoadedSectorUpdateEvent event, EntityRef entity, TestComponent component) {
         //Where changes to the world would be made
         //This is only called while the chunk is loaded
-        logger.info("Entity {} loaded. Value is {}", entity.getId(), entity.getComponent(TestComponent.class).floatValue);
+        logger.info("Entity {} loaded. Value is {}", entity.getId(), component.floatValue);
     }
 
     @ReceiveEvent(components = SectorSimulationComponent.class)
