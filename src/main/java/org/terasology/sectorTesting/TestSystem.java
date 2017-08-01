@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.entity.internal.EntityScope;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.sectors.LoadedSectorUpdateEvent;
 import org.terasology.entitySystem.sectors.SectorSimulationComponent;
@@ -49,12 +50,9 @@ public class TestSystem extends BaseComponentSystem {
     @Override
     public void postBegin() {
         //Creating sector-scope entity with TestComponent for simulation
-        //This has a maxDelta of 1, so will simulate at least once per second
-        EntityRef entity = entityManager.createSectorEntity(1);
+        //Set the entity to simulate every 10 seconds when unloaded, and every second when loaded
+        EntityRef entity = entityManager.createSectorEntity(10000, 1000);
         entity.addComponent(new TestComponent());
-
-        //Make sure the entity stays loaded
-        entity.setAlwaysRelevant(true);
 
         //Add a SectorRegionComponent to set the watched chunks
         Set<Vector3i> chunks = new HashSet<>();
