@@ -1,8 +1,8 @@
 {
-    "id" : "SectorTesting",
+    "id" : "TutorialSectors",
     "version" : "0.1.0-SNAPSHOT",
-    "author" : "",
-    "displayName" : "SectorTesting",
+    "author" : "Vizaxo",
+    "displayName" : "TutorialSectors",
     "description" : "",
     "dependencies" : [],
     "serverSideOnly" : false
