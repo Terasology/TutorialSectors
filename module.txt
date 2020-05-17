@@ -1,9 +1,10 @@
 {
-    "id" : "TutorialSectors",
-    "version" : "0.1.0-SNAPSHOT",
-    "author" : "Vizaxo",
-    "displayName" : "TutorialSectors",
-    "description" : "",
-    "dependencies" : [],
-    "serverSideOnly" : false
+    "id": "TutorialSectors",
+    "version": "1.0.0",
+    "author": "The Terasology Foundation",
+    "displayName": "Sector Tutorial",
+    "description": "Tutorial module for testing world sectors.",
+    "dependencies": [],
+    "serverSideOnly": false,
+    "isTutorial": true
 }
