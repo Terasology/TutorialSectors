@@ -1,7 +1,7 @@
 {
     "id": "TutorialSectors",
     "version": "1.0.0",
-    "author": "Vizaxo",
+    "author": "The Terasology Foundation",
     "displayName": "Sector Tutorial",
     "description": "Tutorial module for testing world sectors.",
     "dependencies": [],
