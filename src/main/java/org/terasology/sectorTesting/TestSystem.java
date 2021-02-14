@@ -1,25 +1,13 @@
-/*
- * Copyright 2017 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.sectorTesting;
 
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.entity.internal.EntityScope;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.sectors.LoadedSectorUpdateEvent;
 import org.terasology.entitySystem.sectors.SectorSimulationComponent;
@@ -29,10 +17,8 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.location.LocationComponent;
-import org.terasology.math.ChunkMath;
-import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
+import org.terasology.world.chunks.Chunks;
 import org.terasology.world.chunks.event.BeforeChunkUnload;
 import org.terasology.world.chunks.event.OnChunkLoaded;
 
@@ -59,7 +45,7 @@ public class TestSystem extends BaseComponentSystem {
         //Add the chunk with position 10, 0, 0
         chunks.add(new Vector3i(10, 0, 0));
         //Add the chunk that contains the block with position 1000, 0, 1000
-        chunks.add(ChunkMath.calcChunkPos(new Vector3i(1000, 0, 1000)));
+        chunks.add(Chunks.toChunkPos(new Vector3i(1000, 0, 1000)));
         entity.addComponent(SectorUtil.createSectorRegionComponent(chunks));
 
         //Set the location to 0, 0, 0
