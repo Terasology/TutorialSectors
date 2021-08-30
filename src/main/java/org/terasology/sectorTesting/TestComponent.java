@@ -15,7 +15,7 @@
  */
 package org.terasology.sectorTesting;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 public class TestComponent implements Component {
     public float floatValue;
