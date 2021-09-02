@@ -15,8 +15,14 @@
  */
 package org.terasology.sectorTesting;
 
-import org.terasology.entitySystem.Component;
 
-public class TestComponent implements Component {
+import org.terasology.gestalt.entitysystem.component.Component;
+
+public class TestComponent implements Component<TestComponent> {
     public float floatValue;
+
+    @Override
+    public void copyFrom(TestComponent other) {
+        this.floatValue = other.floatValue;
+    }
 }
